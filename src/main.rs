@@ -2,6 +2,7 @@
 
 use clap::Parser;
 use command_line_application as clapp;
+use std::io::{Error, ErrorKind};
 
 /// Search for a pattern in a file and display the lines that contain it.
 #[derive(Parser)]
@@ -13,13 +14,16 @@ struct Cli {
     path: std::path::PathBuf,
 }
 
-fn main() {
+fn main() -> Result<(), Error> {
 
     let args = Cli::parse();
+
     let content = std::fs::read_to_string(&args.path)
         .expect("could not read file");
     
     clapp::find_matches(&content, &args.pattern, &std::io::stdout());
+
+    Ok(())
 }
 
 // The test function of it
